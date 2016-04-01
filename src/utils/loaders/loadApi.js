@@ -1,0 +1,53 @@
+import fetchScript from './fetchScript';
+import { apiConfig } from '../../configs';
+
+let loadPromise;
+
+const enabledAPIParams = ['lang', 'apikey', 'coordorder', 'load', 'mode'],
+    successCallbackName = '_$_api_success',
+    errorCallbackName = '_$_api_error';
+
+const defaultOptions = {
+    lang: 'ru_RU',
+    coordorder: 'latlong',
+    load: 'package.full',
+    mode: process.env.NODE_ENV == 'development' ? 'debug' : 'release',
+    ns: 'ymaps',
+    onload: successCallbackName,
+    onerror: errorCallbackName
+};
+
+function generateURL (options = {}) {
+    const params = Object.assign({}, defaultOptions);
+    Object.keys(options).filter(key => enabledAPIParams.indexOf(key) != -1).forEach(key => params[key] = options[key]);
+
+    const queryString = Object.keys(params).reduce((result, key) => {
+            result.push(`${key}=${params[key]}`);
+            return result;
+        }, []).join('&');
+
+    return `https://${apiConfig.host}/${apiConfig.version}/?${queryString}`;
+}
+
+export default function loadApi (options) {
+    if (loadPromise) {
+        return loadPromise;
+    }
+
+    loadPromise = new Promise((resolve, reject) => {
+
+        window[successCallbackName] = (ymaps) => {
+            resolve(ymaps);
+            window[successCallbackName] = null;
+        };
+
+        window[errorCallbackName] = (error) => {
+            reject(error);
+            window[errorCallbackName] = null;
+        };
+
+        fetchScript(generateURL(options));
+    });
+
+    return loadPromise;
+}
