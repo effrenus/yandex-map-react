@@ -1,3 +1,10 @@
-import YandexMap from './MapContainer';
+import Map from './MapContainer';
+import Marker from './MapMarker';
+import MarkerLayout from './MarkerLayout';
+import BalloonLayout from './BalloonLayout';
 
-export default YandexMap;
+export {
+    Map,
+    Marker,
+    MarkerLayout,
+    BalloonLayout};

@@ -1,13 +1,23 @@
+import api from '../api';
 
 class MapController {
-    constructor (ns) {
-        this._ns = ns;
+    constructor () {
+        this._markerCollection = [];
     }
 
-    createMap (container, options) {
-        this._map = new ymaps.Map(container, options);
+    createMap (container, state, options) {
+        this._map = new (api.getAPI()).Map(container, state, options);
 
         return this;
+    }
+
+    appendMarker (marker) {
+        this._markerCollection.push(marker);
+        this._map.geoObjects.add(marker.getAPIInstance());
+    }
+
+    get map () {
+        return this._map;
     }
 
     setOptions (name, value) {

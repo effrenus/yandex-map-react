@@ -2,16 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import MapElement from './MapElement';
 import MapController from './controllers/MapController';
-import loadApi from './utils/loaders/loadApi';
 import config from './configs';
+import api from './api';
 
 class YandexMap extends Component {
     static propTypes = {
         apiKey: PropTypes.string,
-        onApiAvailable: PropTypes.func,
-        zoom: PropTypes.number,
+        onAPIAvailable: PropTypes.func,
         width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        zoom: PropTypes.number,
         state: PropTypes.object,
         options: PropTypes.object
     }
@@ -21,30 +21,62 @@ class YandexMap extends Component {
         center: [55, 45],
         width: 600,
         height: 600,
-        state: {},
+        state: {
+            controls: []
+        },
         options: {},
         style: {
             position: 'relative'
         }
     }
 
+    static childContextTypes = {
+        mapController: PropTypes.object
+    }
+
     constructor (props) {
         super(props);
     }
 
-    _onApiLoad (namespace) {
-        this._ymaps = namespace;
+    getChildContext () {
+        return {
+            mapController: this._controller
+        };
+    }
 
-        this._controller = new MapController(this.ymaps);
+    _getStyle () {
+        return {
+            ...this.props.style,
+            width: typeof this.props.width == 'string' ? this.props.width : `${this.props.width}px`,
+            height: typeof this.props.height == 'string' ? this.props.height : `${this.props.height}px`
+        };
+    }
+
+    _setupMarkers () {
+        React.Children
+            .toArray(this.props.children)
+            .filter(component => component.type && component.type.name == 'MapMarker')
+            .forEach(component => {
+                const clonedComponent = React.cloneElement(component, {mapController: this._controller});
+                ReactDOM.render(clonedComponent, document.createElement('div'));
+            });
+    }
+
+    _onAPILoad (namespace) {
+        this.props.onAPIAvailable && this.props.onAPIAvailable(namespace);
+
+        this._controller = new MapController();
         this._controller.createMap(
-            this.refs.mapContainer,
+            ReactDOM.findDOMNode(this.refs.mapContainer),
             {
+                ...this.props.state,
                 center: this.props.center,
                 zoom: this.props.zoom
-            }
+            },
+            {...this.props.options}
         );
 
-        this.props.onApiAvailable && this.props.onApiAvailable(ymaps);
+        this._setupMarkers();
     }
 
     componentWillReceiveProps (nextProps) {
@@ -60,14 +92,18 @@ class YandexMap extends Component {
     }
 
     componentDidMount () {
-        loadApi()
-            .then(this._onApiLoad.bind(this))
-            .catch((error) => console.log('Error occured: %s', error));
+        if (api.isAvailible()) {
+            this._onAPILoad(api.getAPI());
+        } else {
+            api.load()
+                .then(this._onAPILoad.bind(this))
+                .catch((error) => console.log('Error occured: %s', error));
+        }
     }
 
     render () {
         return (
-            <div style={this.props.style}>
+            <div style={this._getStyle()}>
                 <MapElement ref="mapContainer" />
             </div>
         );

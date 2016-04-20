@@ -1,0 +1,78 @@
+import api from '../api';
+
+function detectImagesLoaded (element) {
+    const images = Array.from(element.querySelectorAll('img') || []);
+
+    if (images.length == 0) {
+        return;
+    }
+
+    return Promise.all(images.map(image => {
+        return new Promise((resolve, reject) => {
+            if (image.complete) {
+                resolve();
+                return;
+            }
+            image.onload = image.onerror = resolve;
+        });
+    }));
+}
+
+function createLayout (domElement) {
+    debugger;
+    const LayoutClass = (api.getAPI()).templateLayoutFactory.createClass('<i></i>', {
+        build: function () {
+            debugger;
+            LayoutClass.superclass.build.call(this);
+
+            this.options = this.getData().options;
+
+            this._setupContent(domElement);
+            this._updateSize();
+
+            detectImagesLoaded(this.getElement()).then(this._updateMarkerShape.bind(this));
+        },
+
+        getShape: function () {
+            return new (api.getAPI()).shape.Rectangle(
+                new (api.getAPI()).geometry.pixel.Rectangle(
+                    [
+                        [0, 0],
+                        [this._size[0], this._size[1]]
+                    ]
+                )
+            );
+        },
+
+        _updateMarkerShape: function () {
+            this._updateSize();
+            this.events.fire('shapechange');
+        },
+
+        _setupContent: function (domElement) {
+            const element = this.getElement();
+            element.appendChild(domElement);
+        },
+
+        _updateSize: function () {
+            this._size = this._getSize();
+        },
+
+        _getSize: function () {
+            const element = this.getElement().querySelector('.icon-content');
+            return [element.offsetWidth, element.offsetHeight];
+        }
+    });
+
+    return LayoutClass;
+}
+
+export default {
+    createLayoutClass: function (domElement) {
+        return createLayout(domElement);
+    },
+
+    createBalloonLayoutClass: function (domElement) {
+        return createLayout(domElement);
+    }
+}
