@@ -11,7 +11,7 @@ const defaultOptions = {
     lang: 'ru_RU',
     coordorder: 'latlong',
     load: 'package.full',
-    mode: process.env.NODE_ENV == 'development' ? 'debug' : 'release',
+    mode: 'debug',
     ns: 'ymaps',
     onload: successCallbackName,
     onerror: errorCallbackName

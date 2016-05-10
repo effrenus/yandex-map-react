@@ -71,7 +71,7 @@ class MapMarker extends Component {
     }
 
     render () {
-        return false;
+        return null;
     }
 }
 

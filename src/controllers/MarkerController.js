@@ -14,7 +14,7 @@ class MarkerController {
     constructor (coordinates, options = {}) {
         this.options = options;
         this._coordinates = coordinates;
-        this._marker = new (api.getAPI()).Placemark(coordinates, {balloonContent: 'balloon'}, this._setupMarkerOptions());
+        this._marker = new (api.getAPI()).Placemark(coordinates, null, this._setupMarkerOptions());
     }
 
     /**
@@ -43,12 +43,10 @@ class MarkerController {
         Object.keys(this.options).forEach(key => {
             switch (key) {
                 case 'iconComponent':
-                    options.iconLayout = layouts.createLayoutClass(this.options.iconComponent);
-                    debugger;
+                    options.iconLayout = layouts.createIconLayoutClass(this.options.iconComponent);
                     break;
                 case 'balloonComponent':
                     options.balloonLayout = layouts.createBalloonLayoutClass(this.options.balloonComponent);
-                    debugger;
                     break;
                 default:
                     break;

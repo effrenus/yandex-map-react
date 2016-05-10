@@ -18,11 +18,9 @@ function detectImagesLoaded (element) {
     }));
 }
 
-function createLayout (domElement) {
-    debugger;
-    const LayoutClass = (api.getAPI()).templateLayoutFactory.createClass('<i></i>', {
+function createLayout ({domElement, extendMethods = {}}) {
+    const LayoutClass = (api.getAPI()).templateLayoutFactory.createClass('<i></i>', Object.assign({
         build: function () {
-            debugger;
             LayoutClass.superclass.build.call(this);
 
             this.options = this.getData().options;
@@ -62,17 +60,40 @@ function createLayout (domElement) {
             const element = this.getElement().querySelector('.icon-content');
             return [element.offsetWidth, element.offsetHeight];
         }
-    });
+    }, extendMethods));
 
     return LayoutClass;
 }
 
 export default {
-    createLayoutClass: function (domElement) {
-        return createLayout(domElement);
+    createIconLayoutClass: function (domElement) {
+        return createLayout({
+            domElement,
+            extendMethods: {
+                _updateSize: function () {
+                    var geoObject,
+                        oldSize = this._size;
+
+                    this._size = this._getSize();
+
+                    // Update layout offset.
+                    if (!oldSize || (oldSize[0] != this._size[0] || oldSize[1] != this._size[1])) {
+                        geoObject = this.getData().geoObject;
+
+                        if (geoObject.getOverlaySync()) {
+                            geoObject.options.set('iconOffset', [-this._size[0] / 2, -this._size[1]]);
+                        } else {
+                            geoObject.getOverlay().then(() => {
+                                geoObject.options.set('iconOffset', [-this._size[0] / 2, -this._size[1]]);
+                            });
+                        }
+                    }
+                }
+            }
+        });
     },
 
     createBalloonLayoutClass: function (domElement) {
-        return createLayout(domElement);
+        return createLayout({domElement});
     }
 }
