@@ -21,7 +21,7 @@ class MapController {
     }
 
     setOptions (name, value) {
-        //
+        this._map.options.set(name, value);
     }
 
     setState (name, value) {

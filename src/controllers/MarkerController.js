@@ -40,7 +40,7 @@ class MarkerController {
 
     _setupMarkerOptions () {
         const options = {};
-        Object.keys(this.options).forEach(key => {
+        Object.keys(this.options).forEach((key) => {
             switch (key) {
                 case 'iconComponent':
                     options.iconLayout = layouts.createIconLayoutClass(this.options.iconComponent);

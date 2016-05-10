@@ -7,7 +7,8 @@ class Api {
 
     setAPI (instance) {
         this.api = instance;
-        return api;
+
+        return this.api;
     }
 
     getAPI () {
@@ -15,7 +16,7 @@ class Api {
     }
 
     isAvailible () {
-        return !!this.api;
+        return Boolean(this.api);
     }
 
     /**
@@ -24,9 +25,9 @@ class Api {
      */
     load () {
         return loadApi().then((instance) => {
-                this.api = instance;
-                return instance;
-            });
+            this.api = instance;
+            return instance;
+        });
     }
 }
 

@@ -3,12 +3,12 @@ import api from '../api';
 function detectImagesLoaded (element) {
     const images = Array.from(element.querySelectorAll('img') || []);
 
-    if (images.length == 0) {
+    if (images.length === 0) {
         return;
     }
 
-    return Promise.all(images.map(image => {
-        return new Promise((resolve, reject) => {
+    return Promise.all(images.map((image) => {
+        return new Promise((resolve) => {
             if (image.complete) {
                 resolve();
                 return;
@@ -71,13 +71,13 @@ export default {
             domElement,
             extendMethods: {
                 _updateSize: function () {
-                    var geoObject,
-                        oldSize = this._size;
+                    let geoObject;
+                    const oldSize = this._size;
 
                     this._size = this._getSize();
 
                     // Update layout offset.
-                    if (!oldSize || (oldSize[0] != this._size[0] || oldSize[1] != this._size[1])) {
+                    if (!oldSize || (oldSize[0] !== this._size[0] || oldSize[1] !== this._size[1])) {
                         geoObject = this.getData().geoObject;
 
                         if (geoObject.getOverlaySync()) {
@@ -96,4 +96,4 @@ export default {
     createBalloonLayoutClass: function (domElement) {
         return createLayout({domElement});
     }
-}
+};
