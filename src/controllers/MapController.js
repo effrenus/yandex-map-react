@@ -2,18 +2,20 @@ import api from '../api';
 
 class MapController {
     constructor () {
-        this._markerCollection = [];
+
     }
 
     createMap (container, state, options) {
         this._map = new (api.getAPI()).Map(container, state, options);
+        this.events = this._map.events.group();
+
+        this._setupCollection();
 
         return this;
     }
 
     appendMarker (marker) {
-        this._markerCollection.push(marker);
-        this._map.geoObjects.add(marker.getAPIInstance());
+        this._geoCollection.add(marker.getAPIInstance());
     }
 
     get map () {
@@ -26,6 +28,16 @@ class MapController {
 
     setState (name, value) {
         this._map.state.set(name, value);
+    }
+
+    destroy () {
+        this.events.removeAll();
+        this._map.destroy();
+    }
+
+    _setupCollection () {
+        this._geoCollection = new (api.getAPI()).GeoObjectCollection();
+        this._map.geoObjects.add(this._geoCollection);
     }
 }
 

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import MarkerController from './controllers/MarkerController';
+import supportEvents from './apiEventsLists/geoObject';
+import {lifecycleDecorator} from './utils/decorators';
 
 class MapMarker extends Component {
     static propTypes = {
@@ -17,12 +19,6 @@ class MapMarker extends Component {
         this.options = {};
     }
 
-    componentWillUnmount () {
-        this.context.mapController.removeMarker(marker);
-        this._marker.destroy();
-        this._marker = null;
-    }
-
     componentDidUpdate () {
         this.props.controller.updateLayout();
     }
@@ -31,12 +27,13 @@ class MapMarker extends Component {
         const {lat, lon} = this.props;
 
         this._setupOptions();
-        this._marker = new MarkerController([lat, lon], this.options);
-        this.props.mapController.appendMarker(this._marker);
+        this._controller = new MarkerController([lat, lon], this.options);
+        this.props.mapController.appendMarker(this._controller);
+        this._setupEvents();
     }
 
-    setController (controller) {
-        this._mapController = controller;
+    getController () {
+        return this._controller ? this._controller : null;
     }
 
     _setupOptions () {
@@ -75,4 +72,4 @@ class MapMarker extends Component {
     }
 }
 
-export default  MapMarker;
+export default lifecycleDecorator(MapMarker, {supportEvents});

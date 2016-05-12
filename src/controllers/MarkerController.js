@@ -15,6 +15,7 @@ class MarkerController {
         this.options = options;
         this._coordinates = coordinates;
         this._marker = new (api.getAPI()).Placemark(coordinates, null, this._setupMarkerOptions());
+        this.events = this._marker.events.group();
     }
 
     /**
@@ -35,7 +36,9 @@ class MarkerController {
      * Destroy marker
      */
     destroy () {
-        this._marker.destroy();
+        this.events.removeAll();
+        this._marker.setParent(null);
+        this._marker = null;
     }
 
     _setupMarkerOptions () {
