@@ -5,7 +5,7 @@ export default function fetchScript (url) {
         script.onerror = reject;
         script.src = url;
 
-        var beforeScript = document.getElementsByTagName('script')[0];
+        const beforeScript = document.getElementsByTagName('script')[0];
         beforeScript.parentNode.insertBefore(script, beforeScript);
     });
 }

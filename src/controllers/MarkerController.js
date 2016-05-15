@@ -14,7 +14,8 @@ class MarkerController {
     constructor (coordinates, options = {}) {
         this.options = options;
         this._coordinates = coordinates;
-        this._marker = new (api.getAPI()).Placemark(coordinates, null, this._setupMarkerOptions());
+        this._marker = new (api.getAPI()).Placemark(coordinates, null, null);
+        this.events = this._marker.events.group();
     }
 
     /**
@@ -31,27 +32,38 @@ class MarkerController {
         return this._coordinates;
     }
 
+    setPosition (coordinates) {
+        this._marker.geometry.setCoordinates(coordinates);
+    }
+
+    /**
+     *
+     * @param {String} name
+     * @param {HTMLElement} element
+     */
+    setLayout (name, element) {
+        let layout;
+
+        if (name === 'iconLayout') {
+            layout = layouts.createIconLayoutClass(element);
+        } else if (name === 'balloonLayout') {
+            layout = layouts.createBalloonLayoutClass(element);
+        }
+
+        this._marker.options.set(name, layout);
+    }
+
     /**
      * Destroy marker
      */
     destroy () {
-        this._marker.destroy();
+        this.events.removeAll();
+        this._marker.setParent(null);
+        this._marker = null;
     }
 
     _setupMarkerOptions () {
         const options = {};
-        Object.keys(this.options).forEach(key => {
-            switch (key) {
-                case 'iconComponent':
-                    options.iconLayout = layouts.createIconLayoutClass(this.options.iconComponent);
-                    break;
-                case 'balloonComponent':
-                    options.balloonLayout = layouts.createBalloonLayoutClass(this.options.balloonComponent);
-                    break;
-                default:
-                    break;
-            }
-        });
 
         return options;
     }

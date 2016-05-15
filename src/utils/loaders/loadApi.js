@@ -1,11 +1,11 @@
 import fetchScript from './fetchScript';
-import { apiConfig } from '../../configs';
+import {apiConfig} from '../../configs';
 
 let loadPromise;
 
-const enabledAPIParams = ['lang', 'apikey', 'coordorder', 'load', 'mode'],
-    successCallbackName = '_$_api_success',
-    errorCallbackName = '_$_api_error';
+const enabledAPIParams = ['lang', 'apikey', 'coordorder', 'load', 'mode'];
+const successCallbackName = '_$_api_success';
+const errorCallbackName = '_$_api_error';
 
 const defaultOptions = {
     lang: 'ru_RU',
@@ -19,12 +19,16 @@ const defaultOptions = {
 
 function generateURL (options = {}) {
     const params = Object.assign({}, defaultOptions);
-    Object.keys(options).filter(key => enabledAPIParams.indexOf(key) != -1).forEach(key => params[key] = options[key]);
+    Object.keys(options)
+        .filter((key) => enabledAPIParams.indexOf(key) !== -1)
+        .forEach((key) => {
+            params[key] = options[key];
+        });
 
     const queryString = Object.keys(params).reduce((result, key) => {
-            result.push(`${key}=${params[key]}`);
-            return result;
-        }, []).join('&');
+        result.push(`${key}=${params[key]}`);
+        return result;
+    }, []).join('&');
 
     return `https://${apiConfig.host}/${apiConfig.version}/?${queryString}`;
 }

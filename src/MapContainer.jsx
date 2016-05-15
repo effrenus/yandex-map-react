@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import MapElement from './MapElement';
 import MapController from './controllers/MapController';
+import supportEvents from './apiEventsLists/map';
+import {eventsDecorator} from './utils/decorators';
 import config from './configs';
 import api from './api';
 
@@ -36,6 +38,9 @@ class YandexMap extends Component {
 
     constructor (props) {
         super(props);
+        this.state = {
+            isAPILoaded: false
+        };
     }
 
     getChildContext () {
@@ -44,39 +49,8 @@ class YandexMap extends Component {
         };
     }
 
-    _getStyle () {
-        return {
-            ...this.props.style,
-            width: typeof this.props.width == 'string' ? this.props.width : `${this.props.width}px`,
-            height: typeof this.props.height == 'string' ? this.props.height : `${this.props.height}px`
-        };
-    }
-
-    _setupMarkers () {
-        React.Children
-            .toArray(this.props.children)
-            .filter(component => component.type && component.type.name == 'MapMarker')
-            .forEach(component => {
-                const clonedComponent = React.cloneElement(component, {mapController: this._controller});
-                ReactDOM.render(clonedComponent, document.createElement('div'));
-            });
-    }
-
-    _onAPILoad (namespace) {
-        this.props.onAPIAvailable && this.props.onAPIAvailable(namespace);
-
-        this._controller = new MapController();
-        this._controller.createMap(
-            ReactDOM.findDOMNode(this.refs.mapContainer),
-            {
-                ...this.props.state,
-                center: this.props.center,
-                zoom: this.props.zoom
-            },
-            {...this.props.options}
-        );
-
-        this._setupMarkers();
+    getController () {
+        return this._controller ? this._controller : null;
     }
 
     componentWillReceiveProps (nextProps) {
@@ -105,9 +79,36 @@ class YandexMap extends Component {
         return (
             <div style={this._getStyle()}>
                 <MapElement ref="mapContainer" />
+                {Boolean(this.state.isAPILoaded) ? this.props.children : null}
             </div>
         );
     }
+
+    _getStyle () {
+        return {
+            ...this.props.style,
+            width: typeof this.props.width == 'string' ? this.props.width : `${this.props.width}px`,
+            height: typeof this.props.height == 'string' ? this.props.height : `${this.props.height}px`
+        };
+    }
+
+    _onAPILoad (namespace) {
+        this.props.onAPIAvailable && this.props.onAPIAvailable(namespace);
+
+        this._controller = new MapController();
+        this._controller.createMap(
+            ReactDOM.findDOMNode(this.refs.mapContainer),
+            {
+                ...this.props.state,
+                center: this.props.center,
+                zoom: this.props.zoom
+            },
+            {...this.props.options}
+        );
+
+        this._setupEvents();
+        this.setState({isAPILoaded: true});
+    }
 }
 
-export default YandexMap;
+export default eventsDecorator(YandexMap, {supportEvents});

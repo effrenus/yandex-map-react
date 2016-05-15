@@ -1,7 +1,7 @@
 /**
  * Yandex API config
  */
-export let apiConfig = {
+export const apiConfig = {
     host: 'api-maps.yandex.ru',
     version: '2.1'
 };

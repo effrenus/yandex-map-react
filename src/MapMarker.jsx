@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import MarkerController from './controllers/MarkerController';
+import supportEvents from './apiEventsLists/geoObject';
+import {eventsDecorator} from './utils/decorators';
 
 class MapMarker extends Component {
     static propTypes = {
@@ -17,43 +19,47 @@ class MapMarker extends Component {
         this.options = {};
     }
 
-    componentWillUnmount () {
-        this.context.mapController.removeMarker(marker);
-        this._marker.destroy();
-        this._marker = null;
-    }
+    componentDidUpdate (prevProps) {
+        const {lat, lon, children} = this.props;
+        if (lat !== prevProps.lat || lon !== prevProps.lon) {
+            this._controller.setPosition([lat, lon]);
+        }
 
-    componentDidUpdate () {
-        this.props.controller.updateLayout();
+        if (children != prevProps.children) {
+            this._clearLayouts();
+            this._setupLayouts();
+        }
     }
 
     componentDidMount () {
         const {lat, lon} = this.props;
 
-        this._setupOptions();
-        this._marker = new MarkerController([lat, lon], this.options);
-        this.props.mapController.appendMarker(this._marker);
+        this._controller = new MarkerController([lat, lon]);
+        this._setupLayouts();
+        this._setupEvents();
+
+        this.context.mapController.appendMarker(this._controller);
     }
 
-    setController (controller) {
-        this._mapController = controller;
+    componentWillUnmount () {
+        this._clearLayouts();
+        this._controller.destroy();
     }
 
-    _setupOptions () {
+    getController () {
+        return this._controller ? this._controller : null;
+    }
+
+    _setupLayouts () {
         React.Children
             .toArray(this.props.children)
             .forEach(component => {
-                let container;
                 switch (component.type.name) {
                     case 'MarkerLayout':
-                        container = this._createMarkerContainer()
-                        this._markerLayoutInstance = ReactDOM.render(component, container);
-                        this.options.iconComponent = container;
+                        this._setupMarkerLayout(component);
                         break;
                     case 'BalloonLayout':
-                        container = document.createElement('div');
-                        ReactDOM.render(component, container);
-                        this.options.balloonComponent = container;
+                        this._setupBalloonLayout(component);
                         break;
                     default:
                         break;
@@ -61,13 +67,32 @@ class MapMarker extends Component {
             });
     }
 
-    _createMarkerContainer () {
-        const node = document.createElement('div');
+    _setupMarkerLayout (component) {
+        this._markerElement = document.createElement('div');
+        this._markerElement.className = 'icon-content';
+        this._markerElement.style.display = 'inline-block';
 
-        node.className = 'icon-content';
-        node.style.display = 'inline-block';
+        ReactDOM.render(component, this._markerElement);
+        this._controller.setLayout('iconLayout', this._markerElement);
+    }
 
-        return node;
+    _setupBalloonLayout (component) {
+        this._balloonElement = document.createElement('div');
+
+        ReactDOM.render(component, this._balloonElement);
+        this._controller.setLayout('balloonLayout', this._balloonElement);
+    }
+
+    _clearLayouts () {
+        if (this._markerElement) {
+            ReactDOM.unmountComponentAtNode(this._markerElement);
+            this._markerElement = null;
+        }
+
+        if (this._balloonElement) {
+            ReactDOM.unmountComponentAtNode(this._balloonElement);
+            this._balloonElement = null;
+        }
     }
 
     render () {
@@ -75,4 +100,4 @@ class MapMarker extends Component {
     }
 }
 
-export default  MapMarker;
+export default eventsDecorator(MapMarker, {supportEvents});
