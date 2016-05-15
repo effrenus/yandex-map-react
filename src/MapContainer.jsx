@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import MapElement from './MapElement';
 import MapController from './controllers/MapController';
 import supportEvents from './apiEventsLists/map';
-import {lifecycleDecorator} from './utils/decorators';
+import {eventsDecorator} from './utils/decorators';
 import config from './configs';
 import api from './api';
 
@@ -38,6 +38,9 @@ class YandexMap extends Component {
 
     constructor (props) {
         super(props);
+        this.state = {
+            isAPILoaded: false
+        };
     }
 
     getChildContext () {
@@ -76,6 +79,7 @@ class YandexMap extends Component {
         return (
             <div style={this._getStyle()}>
                 <MapElement ref="mapContainer" />
+                {Boolean(this.state.isAPILoaded) ? this.props.children : null}
             </div>
         );
     }
@@ -103,18 +107,8 @@ class YandexMap extends Component {
         );
 
         this._setupEvents();
-        this._setupMarkers();
-    }
-
-    _setupMarkers () {
-        React.Children
-            .toArray(this.props.children)
-            .filter(component => component.type && component.type.name == 'MapMarker')
-            .forEach(component => {
-                const clonedComponent = React.cloneElement(component, {mapController: this._controller});
-                ReactDOM.render(clonedComponent, document.createElement('div'));
-            });
+        this.setState({isAPILoaded: true});
     }
 }
 
-export default lifecycleDecorator(YandexMap, {supportEvents});
+export default eventsDecorator(YandexMap, {supportEvents});
