@@ -20,6 +20,8 @@ export default function ContactMap (props) {
 
 ## Installation
 
+`yandex-map-react` requires React >= 0.14
+
 ### npm
 
 ```
@@ -36,9 +38,13 @@ npm install --save yandex-map-react
 | [Supported YandexMap API params](https://tech.yandex.com/maps/doc/jsapi/2.1/ref/reference/Map-docpage/) |
 | `center` | [55, 45] | Array[Number] | coordinates of map center |
 | `zoom` | 10 | Number | zoom level |
-| `state` | {controls: []} | Object | describe map state (ex: [controls](https://tech.yandex.com/maps/doc/jsapi/2.1/ref/reference/Map-docpage/#param-state.controls)) |
+| `state` | {controls: []} | Object | describe map state (ex. [controls](https://tech.yandex.com/maps/doc/jsapi/2.1/ref/reference/Map-docpage/#param-state.controls)) |
 | Callbacks |
 | `onAPIAvailable` | - | Function | callback will be invoked as soon as YandexMAP API available |
+
+## Events
+
+Components support API events, to handle convert first letter of event name to uppercase and add `on` to begin. Example: `mousemove` -> `onMousemove` ([description](https://tech.yandex.com/maps/doc/jsapi/2.1/ref/reference/IDomEventEmitter-docpage/#event-mousemove)).
 
 ## Features
 
