@@ -108,6 +108,10 @@ class YandexMap extends Component {
 
         this._setupEvents();
         this.setState({isAPILoaded: true});
+
+        if (this.props.onMapAvailable) {
+            this.props.onMapAvailable(this._controller.map);
+        }
     }
 }
 
