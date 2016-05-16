@@ -1,6 +1,6 @@
 {
   "name": "yandex-map-react",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.5",
   "description": "Yandex map react",
   "main": "lib/index.js",
   "scripts": {
@@ -20,6 +20,9 @@
   ],
   "author": "Alexey Sazonov",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/effrenus/yandex-map-react/issues"
+  },
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
@@ -31,9 +34,12 @@
     "babel-plugin-syntax-decorators": "^6.8.0",
     "eslint": "^2.9.0",
     "eslint-config-loris": "^4.0.0",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8"
   },
   "peerDependencies": {
-    "react": "^0.14.8"
+    "react": "^0.14.8 || ^15.0.0",
+    "react-dom": "^0.14.8 || ^15.0.0"
   }
 }
