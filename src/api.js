@@ -2,7 +2,7 @@ import loadApi from './utils/loaders/loadApi';
 
 class Api {
     constructor () {
-        this.api = null;
+        this.api = window.ymaps ? window.ymaps : null;
     }
 
     setAPI (instance) {
@@ -23,8 +23,8 @@ class Api {
      * Loading API
      * @return {Promise}
      */
-    load () {
-        return loadApi().then((instance) => {
+    load (options={}) {
+        return loadApi(options).then((instance) => {
             this.api = instance;
             return instance;
         });

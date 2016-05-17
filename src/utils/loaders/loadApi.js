@@ -12,12 +12,12 @@ const defaultOptions = {
     coordorder: 'latlong',
     load: 'package.full',
     mode: 'debug',
-    ns: 'ymaps',
+    ns: '',
     onload: successCallbackName,
     onerror: errorCallbackName
 };
 
-function generateURL (options = {}) {
+function generateURL (options) {
     const params = Object.assign({}, defaultOptions);
     Object.keys(options)
         .filter((key) => enabledAPIParams.indexOf(key) !== -1)
