@@ -15,6 +15,7 @@ class YandexMap extends Component {
         height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         zoom: PropTypes.number,
         state: PropTypes.object,
+        coordorder: PropTypes.oneOf(['latlong', 'longlat']),
         options: PropTypes.object
     }
 
@@ -69,7 +70,7 @@ class YandexMap extends Component {
         if (api.isAvailible()) {
             this._onAPILoad(api.getAPI());
         } else {
-            api.load()
+            api.load(this._getAPIParams())
                 .then(this._onAPILoad.bind(this))
                 .catch((error) => console.log('Error occured: %s', error));
         }
@@ -82,6 +83,16 @@ class YandexMap extends Component {
                 {Boolean(this.state.isAPILoaded) ? this.props.children : null}
             </div>
         );
+    }
+
+    _getAPIParams () {
+        const params = {}
+
+        if (this.props.coordorder) {
+            params.coordorder = this.props.coordorder;
+        }
+
+        return params;
     }
 
     _getStyle () {
