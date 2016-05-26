@@ -7,7 +7,7 @@ import {eventsDecorator} from './utils/decorators';
 import config from './configs';
 import api from './api';
 
-class YandexMap extends Component {
+class Map extends Component {
     static propTypes = {
         apiKey: PropTypes.string,
         onAPIAvailable: PropTypes.func,
@@ -126,4 +126,4 @@ class YandexMap extends Component {
     }
 }
 
-export default eventsDecorator(YandexMap, {supportEvents});
+export default eventsDecorator(Map, {supportEvents});

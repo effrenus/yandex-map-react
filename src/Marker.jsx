@@ -4,7 +4,7 @@ import MarkerController from './controllers/MarkerController';
 import supportEvents from './apiEventsLists/geoObject';
 import {eventsDecorator} from './utils/decorators';
 
-class MapMarker extends Component {
+class Marker extends Component {
     static propTypes = {
         lat: PropTypes.number.isRequired,
         lon: PropTypes.number.isRequired,
@@ -100,4 +100,4 @@ class MapMarker extends Component {
     }
 }
 
-export default eventsDecorator(MapMarker, {supportEvents});
+export default eventsDecorator(Marker, {supportEvents});
