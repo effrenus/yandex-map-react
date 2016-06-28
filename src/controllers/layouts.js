@@ -4,7 +4,7 @@ function detectImagesLoaded (element) {
     const images = Array.from(element.querySelectorAll('img') || []);
 
     if (images.length === 0) {
-        return;
+        return Promise.resolve();
     }
 
     return Promise.all(images.map((image) => {
