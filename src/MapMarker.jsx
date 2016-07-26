@@ -20,10 +20,16 @@ class MapMarker extends Component {
     }
 
     componentDidUpdate (prevProps) {
-        const {lat, lon, children} = this.props;
+        const {lat, lon, children, properties} = this.props;
         if (lat !== prevProps.lat || lon !== prevProps.lon) {
             this._controller.setPosition([lat, lon]);
         }
+
+        Object.keys(properties).forEach(propName => {
+            if (!prevProps.properties || properties[propName] !== prevProps.properties[propName]) {
+                this._controller.setProperty(propName, properties[propName]);
+            }
+        });
 
         if (children != prevProps.children) {
             this._clearLayouts();
