@@ -20,7 +20,7 @@ class MapMarker extends Component {
     }
 
     componentDidUpdate (prevProps) {
-        const {lat, lon, children, properties} = this.props;
+        const {lat, lon, children, properties, options} = this.props;
         if (lat !== prevProps.lat || lon !== prevProps.lon) {
             this._controller.setPosition([lat, lon]);
         }
@@ -31,6 +31,12 @@ class MapMarker extends Component {
             }
         });
 
+        Object.keys(options).forEach(optName => {
+            if (!prevProps.options || options[optName] !== prevProps.options[optName]) {
+                this._controller.setProperty(optName, options[optName]);
+            }
+        });
+
         if (children != prevProps.children) {
             this._clearLayouts();
             this._setupLayouts();
@@ -38,9 +44,9 @@ class MapMarker extends Component {
     }
 
     componentDidMount () {
-        const {lat, lon, properties} = this.props;
+        const {lat, lon, properties, options} = this.props;
 
-        this._controller = new MarkerController([lat, lon], properties);
+        this._controller = new MarkerController([lat, lon], properties, options);
         this._setupLayouts();
         this._setupEvents();
 
