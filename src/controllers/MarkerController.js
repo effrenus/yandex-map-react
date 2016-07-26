@@ -8,13 +8,16 @@ class MarkerController {
     /**
      * @constructor
      * @param  {Number[]} coordinates Marker coordinate
+     * @param  {Object} properties
      * @param  {Object} options
      * @param  {HTMLElement} options.markerDOM Marker layout
      */
-    constructor (coordinates, options = {}) {
+    constructor (coordinates, properties = {}, options = {}) {
         this.options = options;
+        this.properties = properties;
         this._coordinates = coordinates;
         this._marker = new (api.getAPI()).Placemark(coordinates, null, null);
+        this._setupMarkerProperties();
         this.events = this._marker.events.group();
     }
 
@@ -34,6 +37,10 @@ class MarkerController {
 
     setPosition (coordinates) {
         this._marker.geometry.setCoordinates(coordinates);
+    }
+    
+    setProperty (propName, value) {
+        this._marker.properties.set(propName, value);
     }
 
     /**
@@ -60,6 +67,13 @@ class MarkerController {
         this.events.removeAll();
         this._marker.setParent(null);
         this._marker = null;
+    }
+
+    _setupMarkerProperties () {
+        const {properties} = this;
+        Object.keys(properties).forEach(propName => {
+            this.setProperty(propName, properties[propName]);
+        });
     }
 
     _setupMarkerOptions () {

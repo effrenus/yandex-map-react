@@ -32,9 +32,9 @@ class MapMarker extends Component {
     }
 
     componentDidMount () {
-        const {lat, lon} = this.props;
+        const {lat, lon, properties} = this.props;
 
-        this._controller = new MarkerController([lat, lon]);
+        this._controller = new MarkerController([lat, lon], properties);
         this._setupLayouts();
         this._setupEvents();
 
