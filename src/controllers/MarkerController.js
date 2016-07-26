@@ -45,7 +45,7 @@ class MarkerController {
     }
 
     setOption (optName, value) {
-        this._marker.properties.set(optName, value);
+        this._marker.options.set(optName, value);
     }
 
     /**
