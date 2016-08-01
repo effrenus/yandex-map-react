@@ -4,6 +4,9 @@ import MarkerController from './controllers/MarkerController';
 import supportEvents from './apiEventsLists/geoObject';
 import {eventsDecorator} from './utils/decorators';
 
+import MarkerLayout from './MarkerLayout'
+import BalloonLayout from './BalloonLayout'
+
 class MapMarker extends Component {
     static propTypes = {
         lat: PropTypes.number.isRequired,
@@ -54,15 +57,11 @@ class MapMarker extends Component {
         React.Children
             .toArray(this.props.children)
             .forEach(component => {
-                switch (component.type.name) {
-                    case 'MarkerLayout':
-                        this._setupMarkerLayout(component);
-                        break;
-                    case 'BalloonLayout':
-                        this._setupBalloonLayout(component);
-                        break;
-                    default:
-                        break;
+                if (component.type === MarkerLayout) {
+                    this._setupMarkerLayout(component);
+                }
+                if (component.type === BalloonLayout) {
+                    this._setupBalloonLayout(component);
                 }
             });
     }
