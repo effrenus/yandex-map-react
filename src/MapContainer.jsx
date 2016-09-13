@@ -60,6 +60,19 @@ class YandexMap extends Component {
                 case 'controls':
                     this._controller.setState(key, nextProps[key]);
                     break;
+                case 'center':
+                    if (this.props.center[0] !== nextProps.center[0]
+                      || this.props.center[1] !== nextProps.center[1] ) {
+                      this._controller.setCenter(nextProps.center);
+                    }
+
+                    break;
+                case 'zoom':
+                    if (this.props.zoom !== nextProps.zoom) {
+                      this._controller.setZoom(nextProps.zoom);
+                    }
+
+                    break;
                 default:
                     break;
             }
