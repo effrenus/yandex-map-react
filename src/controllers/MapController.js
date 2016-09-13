@@ -31,7 +31,7 @@ class MapController {
     }
 
     setZoom (zoom) {
-        this._map.setCenter(zoom);
+        this._map.setZoom(zoom);
     }
 
     setState (name, value) {
