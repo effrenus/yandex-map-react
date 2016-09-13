@@ -26,6 +26,14 @@ class MapController {
         this._map.options.set(name, value);
     }
 
+    setCenter (coords) {
+        this._map.setCenter(coords);
+    }
+
+    setZoom (zoom) {
+        this._map.setZoom(zoom);
+    }
+
     setState (name, value) {
         this._map.state.set(name, value);
     }
