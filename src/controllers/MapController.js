@@ -5,17 +5,25 @@ class MapController {
 
     }
 
-    createMap (container, state, options) {
+    createMap (container, state, options, cluster, clusterOptions) {
         this._map = new (api.getAPI()).Map(container, state, options);
+        this._clusterEnabled = cluster;
+        if (this._clusterEnabled) {
+            this._cluster = new (api.getAPI()).Clusterer(clusterOptions);
+        }
         this.events = this._map.events.group();
-
         this._setupCollection();
-
         return this;
     }
 
     appendMarker (marker) {
-        this._geoCollection.add(marker.getAPIInstance());
+        if (this._clusterEnabled) {
+            this._cluster.add(marker.getAPIInstance());
+            this._map.setBounds(this._cluster.getBounds());
+        } else {
+            this._geoCollection.add(marker.getAPIInstance());
+            this._map.setBounds(this._geoCollection.getBounds());
+        }
     }
 
     get map () {
@@ -45,7 +53,11 @@ class MapController {
 
     _setupCollection () {
         this._geoCollection = new (api.getAPI()).GeoObjectCollection();
-        this._map.geoObjects.add(this._geoCollection);
+        if (this._clusterEnabled) {
+            this._map.geoObjects.add(this._cluster);
+        } else {
+            this._map.geoObjects.add(this._geoCollection);
+        }
     }
 }
 
