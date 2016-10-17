@@ -39,7 +39,7 @@ class MarkerController {
     setPosition (coordinates) {
         this._marker.geometry.setCoordinates(coordinates);
     }
-    
+
     setProperty (propName, value) {
         this._marker.properties.set(propName, value);
     }

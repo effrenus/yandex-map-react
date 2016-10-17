@@ -36,7 +36,7 @@ class MapMarker extends Component {
 
         Object.keys(options || {}).forEach(optName => {
             if (!prevProps.options || options[optName] !== prevProps.options[optName]) {
-                this._controller.setProperty(optName, options[optName]);
+                this._controller.setOption(optName, options[optName]);
             }
         });
 
