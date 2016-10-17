@@ -2,7 +2,7 @@ import loadApi from './utils/loaders/loadApi';
 
 class Api {
     constructor () {
-        this.api = window.ymaps ? window.ymaps : null;
+        this.api = (typeof window != 'undefined' && window.ymaps) ? window.ymaps : null;
     }
 
     setAPI (instance) {
