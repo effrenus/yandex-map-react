@@ -25,10 +25,7 @@ function generateURL (options) {
             params[key] = options[key];
         });
 
-    const queryString = Object.keys(params).reduce((result, key) => {
-        result.push(`${key}=${params[key]}`);
-        return result;
-    }, []).join('&');
+    const queryString = Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
 
     return `https://${apiConfig.host}/${apiConfig.version}/?${queryString}`;
 }
