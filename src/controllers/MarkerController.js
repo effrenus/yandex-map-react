@@ -12,9 +12,10 @@ class MarkerController {
      * @param  {Object} options
      * @param  {HTMLElement} options.markerDOM Marker layout
      */
-    constructor (coordinates, properties = {}, options = {}) {
+    constructor (coordinates, properties = {}, options = {}, balloonState) {
         this.options = options;
         this.properties = properties;
+        this.balloonState = balloonState;
         this._coordinates = coordinates;
         this._marker = new (api.getAPI()).Placemark(coordinates, null, null);
         this._setupMarkerProperties();
@@ -39,13 +40,25 @@ class MarkerController {
     setPosition (coordinates) {
         this._marker.geometry.setCoordinates(coordinates);
     }
-    
+
     setProperty (propName, value) {
         this._marker.properties.set(propName, value);
     }
 
     setOption (optName, value) {
         this._marker.options.set(optName, value);
+    }
+
+    setBalloonState(state) {
+        if (state === 'opened') {
+            if (!this._marker.balloon.isOpen()) {
+                this._marker.balloon.open();
+            }
+        } else {
+            if (this._marker.balloon.isOpen()) {
+                this._marker.balloon.close();
+            }
+        }
     }
 
     /**

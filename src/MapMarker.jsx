@@ -10,6 +10,11 @@ class MapMarker extends Component {
         lon: PropTypes.number.isRequired,
         properties: PropTypes.object,
         options: PropTypes.object,
+        balloonState: PropTypes.oneOf(['opened', 'closed']),
+    }
+
+    static defaultProps = {
+        balloonState: 'closed'
     }
 
     static contextTypes = {
@@ -22,7 +27,7 @@ class MapMarker extends Component {
     }
 
     componentDidUpdate (prevProps) {
-        const {lat, lon, children, properties, options} = this.props;
+        const {lat, lon, children, properties, options, balloonState} = this.props;
 
         if (lat !== prevProps.lat || lon !== prevProps.lon) {
             this._controller.setPosition([lat, lon]);
@@ -40,6 +45,8 @@ class MapMarker extends Component {
             }
         });
 
+        this._controller.setBalloonState(balloonState);
+
         if (children != prevProps.children) {
             this._clearLayouts();
             this._setupLayouts();
@@ -47,9 +54,9 @@ class MapMarker extends Component {
     }
 
     componentDidMount () {
-        const {lat, lon, properties, options} = this.props;
+        const {lat, lon, properties, options, balloonState} = this.props;
 
-        this._controller = new MarkerController([lat, lon], properties, options);
+        this._controller = new MarkerController([lat, lon], properties, options, balloonState);
         this._setupLayouts();
         this._setupEvents();
 
