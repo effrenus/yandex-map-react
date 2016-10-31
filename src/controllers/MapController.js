@@ -16,6 +16,11 @@ class MapController {
 
     appendMarker (marker) {
         this._geoCollection.add(marker.getAPIInstance());
+        this._map.setBounds(this._geoCollection.getBounds());
+    }
+
+    appendCluster (cluster) {
+        this._geoCollection.add(cluster);
     }
 
     get map () {

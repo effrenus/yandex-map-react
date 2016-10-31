@@ -13,7 +13,9 @@ class MapMarker extends Component {
     }
 
     static contextTypes = {
-        mapController: PropTypes.object
+        mapController: PropTypes.object,
+        cluster: PropTypes.bool,
+        clusterController: PropTypes.object,
     }
 
     constructor (props) {
@@ -53,11 +55,18 @@ class MapMarker extends Component {
         this._setupLayouts();
         this._setupEvents();
 
-        this.context.mapController.appendMarker(this._controller);
+        if(this.context.cluster) {
+            this.context.clusterController.appendMarker(this._controller);
+        } else {
+            this.context.mapController.appendMarker(this._controller);
+        }
     }
 
     componentWillUnmount () {
         this._clearLayouts();
+        if(this.context.cluster) {
+            this.context.clusterController.destroyMarker(this._controller);
+        }
         this._controller.destroy();
     }
 
