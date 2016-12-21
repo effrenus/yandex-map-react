@@ -34,7 +34,8 @@ class YandexMap extends Component {
     }
 
     static childContextTypes = {
-        mapController: PropTypes.object
+        mapController: PropTypes.object,
+        coordorder: PropTypes.oneOf(['latlong', 'longlat'])
     }
 
     constructor (props) {
@@ -46,7 +47,8 @@ class YandexMap extends Component {
 
     getChildContext () {
         return {
-            mapController: this._controller
+            mapController: this._controller,
+            coordorder: this.props.coordorder || 'latlong'
         };
     }
 
