@@ -14,12 +14,16 @@ class YandexMap extends Component {
         width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         zoom: PropTypes.number,
+        cluster: PropTypes.bool,
+        clusterOptions: PropTypes.object,
         state: PropTypes.object,
         coordorder: PropTypes.oneOf(['latlong', 'longlat']),
         options: PropTypes.object
     }
 
     static defaultProps = {
+        cluster: false,
+        clusterOptions: {},
         zoom: 10,
         center: [55, 45],
         width: 600,
@@ -127,9 +131,11 @@ class YandexMap extends Component {
             {
                 ...this.props.state,
                 center: this.props.center,
-                zoom: this.props.zoom
+                zoom: this.props.zoom,
             },
-            {...this.props.options}
+            {...this.props.options},
+            this.props.cluster,
+            this.props.clusterOptions
         );
 
         this._setupEvents();
