@@ -16,7 +16,8 @@ class YandexMap extends Component {
         zoom: PropTypes.number,
         state: PropTypes.object,
         coordorder: PropTypes.oneOf(['latlong', 'longlat']),
-        options: PropTypes.object
+        options: PropTypes.object,
+        bounds: PropTypes.array
     }
 
     static defaultProps = {
@@ -24,6 +25,7 @@ class YandexMap extends Component {
         center: [55, 45],
         width: 600,
         height: 600,
+        bounds: undefined,
         state: {
             controls: []
         },
@@ -72,6 +74,12 @@ class YandexMap extends Component {
                 case 'zoom':
                     if (this.props.zoom !== nextProps.zoom) {
                       this._controller.setZoom(nextProps.zoom);
+                    }
+
+                    break;
+                case 'bounds':
+                    if (this.props.bounds !== nextProps.bounds) {
+                      this._controller.setBounds(nextProps.bounds);
                     }
 
                     break;
@@ -127,7 +135,8 @@ class YandexMap extends Component {
             {
                 ...this.props.state,
                 center: this.props.center,
-                zoom: this.props.zoom
+                zoom: this.props.zoom,
+                bounds: this.props.bounds
             },
             {...this.props.options}
         );
