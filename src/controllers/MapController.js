@@ -34,6 +34,9 @@ class MapController {
     setZoom (zoom) {
         this._map.setZoom(zoom);
     }
+    setBounds (bounds) {
+        this._map.setBounds(bounds);
+    }
 
     setState (name, value) {
         this._map.state.set(name, value);
