@@ -94,8 +94,6 @@ class MapMarker extends Component {
 
     _setupMarkerLayout (component) {
         this._markerElement = document.createElement('div');
-        this._markerElement.className = 'icon-content';
-        this._markerElement.style.display = 'inline-block';
 
         ReactDOM.render(component, this._markerElement);
         this._controller.setLayout('iconLayout', this._markerElement);

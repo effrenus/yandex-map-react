@@ -7,6 +7,7 @@
     "build:lib": "babel ./src -d lib",
     "build:umd": "webpack src/index.js dist/YandexMapReact.js --config webpack.config.dev.js",
     "watch": "babel --watch ./src -d lib",
+    "watch:umd": "webpack src/index.js dist/YandexMapReact.js --watch --config webpack.config.dev.js",
     "lint": "eslint src/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
