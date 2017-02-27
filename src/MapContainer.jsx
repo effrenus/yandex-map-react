@@ -15,8 +15,8 @@ class YandexMap extends Component {
         height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         zoom: PropTypes.number,
         state: PropTypes.object,
-        coordorder: PropTypes.oneOf(['latlong', 'longlat']),
         options: PropTypes.object,
+        loadOptions: PropTypes.object,
         bounds: PropTypes.array
     }
 
@@ -30,6 +30,7 @@ class YandexMap extends Component {
             controls: []
         },
         options: {},
+        loadOptions: {},
         style: {
             position: 'relative'
         }
@@ -50,7 +51,7 @@ class YandexMap extends Component {
     getChildContext () {
         return {
             mapController: this._controller,
-            coordorder: this.props.coordorder || 'latlong'
+            coordorder: this.props.loadOptions.coordorder || 'latlong'
         };
     }
 
@@ -93,7 +94,7 @@ class YandexMap extends Component {
         if (api.isAvailible()) {
             this._onAPILoad(api.getAPI());
         } else {
-            api.load(this._getAPIParams())
+            api.load(this.props.loadOptions)
                 .then(this._onAPILoad.bind(this))
                 .catch((error) => console.log('Error occured: %s', error));
         }
@@ -106,16 +107,6 @@ class YandexMap extends Component {
                 {Boolean(this.state.isAPILoaded) ? this.props.children : null}
             </div>
         );
-    }
-
-    _getAPIParams () {
-        const params = {}
-
-        if (this.props.coordorder) {
-            params.coordorder = this.props.coordorder;
-        }
-
-        return params;
     }
 
     _getStyle () {

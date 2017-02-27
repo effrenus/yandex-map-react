@@ -11,7 +11,7 @@ const defaultOptions = {
     lang: 'ru_RU',
     coordorder: 'latlong',
     load: 'package.full',
-    mode: 'debug',
+    mode: 'release',
     ns: '',
     onload: successCallbackName,
     onerror: errorCallbackName
@@ -27,7 +27,7 @@ function generateURL (options) {
 
     const queryString = Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
 
-    return `https://${apiConfig.host}/${apiConfig.version}/?${queryString}`;
+    return `https://${apiConfig.host}/${options.version || apiConfig.version}/?${queryString}`;
 }
 
 export default function loadApi (options) {
