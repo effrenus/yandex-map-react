@@ -35,6 +35,7 @@ npm install --save yandex-map-react
 | `width` | 600 | Number | container width |
 | `height` | 600 | Number | container height |
 | `style` | {} | Object | styles that will be applied to container element |
+| `loadOptions` | {lang: 'ru_RU', coordorder: 'latlong', load: 'package.full', mode: 'release'} | Object | API loading [params](https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/load-docpage/). Enabled params: `lang`, `apikey`, `coordorder`, `load`, `mode` |
 | [Supported YandexMap API params](https://tech.yandex.com/maps/doc/jsapi/2.1/ref/reference/Map-docpage/) |
 | `center` | [55, 45] | Array[Number] | coordinates of map center |
 | `zoom` | 10 | Number | zoom level |
