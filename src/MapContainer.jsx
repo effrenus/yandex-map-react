@@ -60,7 +60,7 @@ class YandexMap extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        Object.keys(nextProps).forEach(key => {
+        this._controller && Object.keys(nextProps).forEach(key => {
             switch (key) {
                 case 'controls':
                     this._controller.setState(key, nextProps[key]);
