@@ -61,7 +61,10 @@ function createLayout ({domElement, extendMethods = {}}) {
 
             if (this.getElement()) {
                 const element = this.getElement().querySelector('.icon-content');
-                elementSize = [element.offsetWidth, element.offsetHeight];
+
+                if (element) {
+                    elementSize = [element.offsetWidth, element.offsetHeight];
+                }
             }
 
             return elementSize;
