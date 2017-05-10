@@ -35,11 +35,13 @@
     "eslint": "^2.9.0",
     "eslint-config-loris": "^4.0.0",
     "webpack": "^1.12.14",
-    "react": "^0.14.8",
-    "react-dom": "^0.14.8"
+    "react": "^15.5.0",
+    "react-dom": "^15.5.0",
+    "prop-types": "^15.5.0"
   },
   "peerDependencies": {
-    "react": "^0.14.8 || ^15.0.0",
-    "react-dom": "^0.14.8 || ^15.0.0"
+    "prop-types": "^15.5.0",
+    "react": "^0.14.8 || ^15.5.0",
+    "react-dom": "^0.14.8 || ^15.5.0"
   }
 }
