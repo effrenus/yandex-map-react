@@ -19,13 +19,12 @@ function detectImagesLoaded (element) {
 }
 
 function createLayout ({domElement, extendMethods = {}}) {
-    const LayoutClass = (api.getAPI()).templateLayoutFactory.createClass('<i></i>', Object.assign({
+    const LayoutClass = (api.getAPI()).templateLayoutFactory.createClass(domElement.innerHTML, Object.assign({
         build: function () {
             LayoutClass.superclass.build.call(this);
 
             this.options = this.getData().options;
 
-            this._setupContent(domElement);
             this._updateSize();
 
             detectImagesLoaded(this.getElement()).then(this._updateMarkerShape.bind(this));
@@ -47,17 +46,13 @@ function createLayout ({domElement, extendMethods = {}}) {
             this.events.fire('shapechange');
         },
 
-        _setupContent: function (domElement) {
-            const element = this.getElement();
-            element.appendChild(domElement);
-        },
-
         _updateSize: function () {
             this._size = this._getSize();
         },
 
         _getSize: function () {
-            const element = this.getElement().querySelector('.icon-content');
+            const element = this.getElement().firstChild;
+
             return [element.offsetWidth, element.offsetHeight];
         }
     }, extendMethods));
