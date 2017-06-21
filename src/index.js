@@ -3,7 +3,7 @@ import Marker from './MapMarker';
 import MarkerLayout from './MarkerLayout';
 import BalloonLayout from './BalloonLayout';
 import ConstructorJSONImport from './ConstructorJSONImport'
-import Panorama from './PanoramaElement';
+import Panorama from './PanoramaContainer';
 
 export {
     Map,
@@ -11,4 +11,5 @@ export {
     MarkerLayout,
     BalloonLayout,
     ConstructorJSONImport,
-    Panorama};
+    Panorama
+};
