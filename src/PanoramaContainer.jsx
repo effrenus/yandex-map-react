@@ -43,7 +43,9 @@ class YandexPanorama extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            isAPILoaded: false
+            isAPILoaded: false,
+            showService: false,
+            isPanoramas: false
         };
     }
 
@@ -59,37 +61,26 @@ class YandexPanorama extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        // this._controller && Object.keys(nextProps).forEach(key => {
-        //     switch (key) {
-        //         case 'controls':
-        //             this._controller.setState(key, nextProps[key]);
-        //             break;
-        //         case 'center':
-        //             if (this.props.center[0] !== nextProps.center[0]
-        //               || this.props.center[1] !== nextProps.center[1] ) {
-        //               this._controller.setCenter(nextProps.center);
-        //             }
-        //
-        //             break;
-        //         case 'zoom':
-        //             if (this.props.zoom !== nextProps.zoom) {
-        //               this._controller.setZoom(nextProps.zoom);
-        //             }
-        //
-        //             break;
-        //         case 'bounds':
-        //             if (this.props.bounds !== nextProps.bounds) {
-        //               this._controller.setBounds(nextProps.bounds);
-        //             }
-        //
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // });
+        this._controller && Object.keys(nextProps).forEach(key => {
+            switch (key) {
+                case 'showService':
+                    if (this.state.showService !== nextProps.showService) {
+                        this.setState({
+                            showService: nextProps.showService
+                        }, () => this.state.showService && this.init());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     componentDidMount () {
+        this.init();
+    }
+
+    init () {
         if (api.isAvailible()) {
             this._onAPILoad(api.getAPI());
         } else {
@@ -99,10 +90,28 @@ class YandexPanorama extends Component {
         }
     }
 
+    isPanoramas = (isPanoramas) => {
+        this.setState({
+            isPanoramas
+        })
+    }
+
     render () {
+
+        let style = {};
+        if (this.state.showService) {
+            style = this._getStyle();
+        }
+
         return (
-            <div style={this._getStyle()}>
-                <PanoramaElement ref="panoramaPlayer" />
+            <div>
+                <div style={style}>
+                    <PanoramaElement ref="panoramaPlayer" show={this.state.showService}/>
+                </div>
+
+                {
+                    !this.state.showService && this.state.isPanoramas && this.props.children
+                }
             </div>
         );
     }
@@ -118,7 +127,7 @@ class YandexPanorama extends Component {
     _onAPILoad (namespace) {
         this.props.onAPIAvailable && this.props.onAPIAvailable(namespace);
 
-        this._controller = new PanoramaController();
+        this._controller = new PanoramaController(this.isPanoramas);
         this._controller.createPanorama(
             ReactDOM.findDOMNode(this.refs.panoramaPlayer),
             {
@@ -130,7 +139,7 @@ class YandexPanorama extends Component {
             {...this.props.options}
         );
 
-        this.setState({isAPILoaded: true}, () => this._controller.locate());
+        this.setState({isAPILoaded: true}, () => this._controller.locate(this.state.showService));
    }
 }
 

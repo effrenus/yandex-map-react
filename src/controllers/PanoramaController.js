@@ -1,9 +1,8 @@
 import api from '../api';
 
-
 class PanoramaController {
-    constructor () {
-
+    constructor (func) {
+        this._isPanoramas = func;
     }
 
     createPanorama (container, state, options) {
@@ -16,11 +15,18 @@ class PanoramaController {
         return this;
     }
 
-    locate () {
+    locate (showService) {
 
         if (this.isSupported()) {
             this._panorama.locate(this._coordinates).done(
-                (panoramas) => this.show(panoramas),
+                (panoramas) => {
+
+                    this._isPanoramas(Boolean(panoramas.length));
+
+                    if (showService) {
+                        this.show(panoramas);
+                    }
+                },
                 (error) => this.error(error)
             );
         } else {
@@ -32,11 +38,13 @@ class PanoramaController {
 
     show (panoramas) {
         if (panoramas.length > 0) {
-            new this._panorama.Player(
+            const player = new this._panorama.Player(
                 this._container,
                 panoramas[0],
                 this._options
             );
+
+            player.events.add('destroy', this.destroy.bind(this));
         }
     }
 
@@ -50,6 +58,10 @@ class PanoramaController {
 
     destroy () {
         this._panorama = null;
+
+        if (this._options.parentFunct) {
+            this._options.parentFunct();
+        }
     }
 }
 
