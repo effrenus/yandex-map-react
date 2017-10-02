@@ -57,8 +57,17 @@ function createLayout ({domElement, extendMethods = {}}) {
         },
 
         _getSize: function () {
-            const element = this.getElement().querySelector('.icon-content');
-            return [element.offsetWidth, element.offsetHeight];
+            let elementSize = [];
+
+            if (this.getElement()) {
+                const element = this.getElement().querySelector('.icon-content');
+
+                if (element) {
+                    elementSize = [element.offsetWidth, element.offsetHeight];
+                }
+            }
+
+            return elementSize;
         }
     }, extendMethods));
 
@@ -77,15 +86,17 @@ export default {
                     this._size = this._getSize();
 
                     // Update layout offset.
-                    if (!oldSize || (oldSize[0] !== this._size[0] || oldSize[1] !== this._size[1])) {
-                        geoObject = this.getData().geoObject;
+                    if (this._size.length) {
+                        if (!oldSize || (oldSize[0] !== this._size[0] || oldSize[1] !== this._size[1])) {
+                            geoObject = this.getData().geoObject;
 
-                        if (geoObject.getOverlaySync()) {
-                            geoObject.options.set('iconOffset', [-this._size[0] / 2, -this._size[1]]);
-                        } else {
-                            geoObject.getOverlay().then(() => {
+                            if (geoObject.getOverlaySync()) {
                                 geoObject.options.set('iconOffset', [-this._size[0] / 2, -this._size[1]]);
-                            });
+                            } else {
+                                geoObject.getOverlay().then(() => {
+                                    geoObject.options.set('iconOffset', [-this._size[0] / 2, -this._size[1]]);
+                                });
+                            }
                         }
                     }
                 }
