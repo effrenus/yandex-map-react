@@ -1,5 +1,3 @@
-
-
 function toOnEventName (name) {
     return `on${name.substr(0, 1).toUpperCase()}${name.substr(1)}`;
 }

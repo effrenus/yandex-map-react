@@ -30,7 +30,7 @@ class PanoramaController {
                 (error) => this.error(error)
             );
         } else {
-            this.error ({
+            this.error({
                 message: 'Браузер не поддерживается плеером.'
             });
         }
