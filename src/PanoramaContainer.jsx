@@ -48,6 +48,8 @@ class YandexPanorama extends Component {
             showService: false,
             isPanoramas: false
         };
+
+        this.panoramaPlayer = null;
     }
 
     getChildContext () {
@@ -107,7 +109,7 @@ class YandexPanorama extends Component {
         return (
             <div>
                 <div style={style}>
-                    <PanoramaElement ref="panoramaPlayer" show={this.state.showService}/>
+                    <PanoramaElement ref={(node) => { this.panoramaPlayer = node; }} show={this.state.showService}/>
                 </div>
 
                 {
@@ -130,7 +132,7 @@ class YandexPanorama extends Component {
 
         this._controller = new PanoramaController(this.isPanoramas);
         this._controller.createPanorama(
-            ReactDOM.findDOMNode(this.refs.panoramaPlayer),
+            ReactDOM.findDOMNode(this.panoramaPlayer),
             {
                 ...this.props.state,
                 center: this.props.center,
